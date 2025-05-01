@@ -148,10 +148,10 @@ input, select, textarea {
 	}
 
 	body, input, select, textarea {
-		font-family: "Merriweather", Georgia, serif;
+		font-family: 'Inter', sans-serif;
 		font-weight: 300;
-		font-size: 1rem;
-		line-height: 2.375;
+		font-size: 1.25rem;
+		line-height: 2;
 	}
 
 	a {
@@ -180,13 +180,28 @@ input, select, textarea {
 		margin: 0 0 2rem 0;
 	}
 
+	.education-entry {
+		margin-bottom: 1.5rem;
+	}
+	
+	.education-entry h3 {
+		font-size: 1.25rem;
+		margin-bottom: 0.25rem;
+	}
+	
+	.education-entry p {
+		margin: 0.25rem 0;
+		font-size: 1rem;
+	}
+
 	h1, h2, h3, h4, h5, h6 {
-		font-family: "Source Sans Pro", Helvetica, sans-serif;
+		font-family: 'Inter', sans-serif;
 		font-weight: 900;
 		line-height: 1.5;
 		letter-spacing: 0.075em;
 		/* text-transform: uppercase; */
 		margin: 0 0 1rem 0;
+		font-size: 1.5em;
 	}
 
 		h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
