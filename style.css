@@ -1,0 +1,505 @@
+/* ------------------------------------------------------------------
+   yangyishi.com
+
+   Layout idea: the page is a lab display. The grey page background is
+   the adapting field, and the content sits on one patch. In light mode
+   the patch is an increment (lighter than the field); in dark mode it
+   is a decrement (darker than the field). The theme follows the
+   visitor's system setting.
+   ------------------------------------------------------------------ */
+
+/* Atkinson Hyperlegible Next, by the Braille Institute (SIL Open Font
+   License, see fonts/OFL.txt). Subset to Latin; one variable file per style. */
+@font-face {
+  font-family: "Atkinson Hyperlegible Next";
+  src: url("fonts/atkinson-next-latin.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Hyperlegible Next";
+  src: url("fonts/atkinson-next-latin-italic.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ---------- Colors ---------- */
+:root {
+  --field: #d2d2d2;        /* page background: the adapting field */
+  --patch: #ffffff;        /* content panel: an increment */
+  --ink: #1f1f1f;
+  --ink-2: #4b4b4b;        /* secondary text */
+  --rule: #e2e2e2;
+  --accent: #3b36ae;       /* links: a short-wavelength violet-blue */
+  --on-accent: #ffffff;
+
+  /* Research illustrations */
+  --cone-l: #c8413b;
+  --cone-s: #4a42c9;
+  --spec-violet: #5b47c9;
+  --spec-blue: #2f6fd0;
+  --spec-green: #2e8c5a;
+  --spec-yellow: #b8830c;
+  --stim-bg: #8e8e8e;
+  --tile: #efefef;         /* background square behind the line drawings */
+  --stim-inc: #dedede;
+  --stim-dec: #3a3a3a;
+
+  --font: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui,
+          -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --field: #3b3b3b;
+    --patch: #1c1c1c;      /* now a decrement */
+    --ink: #ececec;
+    --ink-2: #b4b4b4;
+    --rule: #303030;
+    --accent: #aba7ff;
+    --on-accent: #17143f;
+    --cone-l: #f07a70;
+    --cone-s: #9d97ff;
+    --spec-violet: #a393ff;
+    --spec-blue: #74a8ff;
+    --spec-green: #62c890;
+    --spec-yellow: #e6b945;
+    --tile: #2a2a2a;
+    --stim-bg: #767676;
+    --stim-inc: #c4c4c4;
+    --stim-dec: #2f2f2f;
+  }
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  margin: 0;
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+img, svg { display: block; max-width: 100%; }
+
+p { margin: 0 0 0.75rem; }
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+cite { font-style: italic; }
+
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 10;
+  padding: 8px 14px;
+  background: var(--patch);
+  color: var(--ink);
+}
+.skip:focus { top: 12px; }
+
+/* ---------- Page layout ---------- */
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 56px 32px 64px;
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  column-gap: 56px;
+  align-items: start;
+}
+
+/* ---------- Profile (on the field) ---------- */
+.profile {
+  position: sticky;
+  top: 56px;
+}
+.portrait {
+  width: 176px;
+  height: auto;
+}
+.profile h1 {
+  margin: 24px 0 10px;
+  font-size: 2.5rem;
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.role {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.affiliation {
+  margin: 6px 0 0;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.contact { margin-top: 24px; }
+.email {
+  margin: 0 0 14px;
+  font-size: 1.0625rem;
+}
+.cv { margin: 0; }
+.button {
+  display: inline-block;
+  padding: 10px 18px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 2px;
+}
+.button:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+.profile-links {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 6px 24px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- The patch ---------- */
+.patch {
+  min-width: 0;
+  background: var(--patch);
+}
+
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--patch);
+  border-bottom: 1px solid var(--rule);
+}
+.section-nav ul {
+  display: flex;
+  gap: 26px;
+  margin: 0;
+  padding: 0 56px;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.section-nav ul::-webkit-scrollbar { display: none; }
+.section-nav a {
+  display: block;
+  padding: 14px 0 13px;
+  color: var(--ink-2);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.section-nav a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.patch-body {
+  padding: 48px 56px 8px;
+  font-size: 1.125rem;
+}
+
+section[id] { scroll-margin-top: 72px; }
+section + section { margin-top: 64px; }
+
+h2 {
+  margin: 0 0 20px;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+h3 {
+  margin: 0;
+  font-size: 1.3125rem;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.section-note {
+  margin: 0 0 16px;
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+.dated + .section-note { margin: 16px 0 0; }
+
+/* ---------- About ---------- */
+.lede {
+  margin-bottom: 16px;
+  font-size: 1.3125rem;
+  line-height: 1.5;
+}
+.highlights {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.highlights li {
+  position: relative;
+  margin: 0 0 10px;
+  padding-left: 24px;
+}
+.highlights li::before {        /* small square markers, like stimulus patches */
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.58em;
+  width: 8px;
+  height: 8px;
+  background: var(--ink-2);
+}
+.tools {
+  margin-top: 20px;
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+.tools strong { color: var(--ink); }
+
+/* ---------- Dated lists: the date always sits in the left column ---------- */
+.dated {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dated > li {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  column-gap: 20px;
+  padding: 10px 0;
+}
+.dated--months > li {
+  grid-template-columns: 5.25rem minmax(0, 1fr);
+}
+.dated > li:first-child { padding-top: 0; }
+.when {
+  color: var(--ink-2);
+  font-size: 1rem;
+  line-height: 1.75rem;
+  font-variant-numeric: tabular-nums;
+}
+.dated li p { margin: 0; }
+.item-title { font-weight: 600; }
+.item-meta {
+  margin-top: 2px;
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+.item-meta strong { color: var(--ink); }
+.item-links,
+.study-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  font-size: 1rem;
+}
+.item-links { margin-top: 4px; }
+
+.subhead {
+  margin: 28px 0 12px;
+  font-size: 1.125rem;
+}
+.subhead:first-of-type { margin-top: 0; }
+
+/* ---------- Research ---------- */
+.study {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  grid-template-areas:
+    "fig head"
+    "fig body";
+  column-gap: 28px;
+  align-items: start;
+}
+.study + .study { margin-top: 44px; }
+.study-figure {
+  grid-area: fig;
+  width: 96px;
+  height: 96px;
+  margin-top: 4px;
+}
+.study-head { grid-area: head; }
+.study-body { grid-area: body; }
+.study-status {
+  margin: 2px 0 12px;
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+.lead { font-weight: 700; }
+.study-links { margin: 0; }
+
+/* Illustration colors */
+.stim-bg  { fill: var(--stim-bg); }
+.stim-inc { fill: var(--stim-inc); }
+.stim-dec { fill: var(--stim-dec); }
+
+/* S-cone figure. S+ and S- are S-cone-isolating relative to the grey square
+   (Smith-Pokorny fundamentals, standard sRGB display assumed, +/-80% S-cone
+   contrast; L- and M-cone excitation and luminance match the grey). */
+:root {
+  --s-plus: #9884bf;
+  --s-minus: #839725;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --s-plus: #7f6ea0;    /* recomputed for the darker grey used in dark mode */
+    --s-minus: #6d7e1d;
+  }
+}
+.stim-s-plus  { fill: var(--s-plus); }
+.stim-s-minus { fill: var(--s-minus); }
+
+.tile  { fill: var(--tile); }
+.slice { fill: var(--patch); stroke-width: 2; }
+.s4 { stroke: var(--spec-violet); }
+.s3 { stroke: var(--spec-blue); }
+.s2 { stroke: var(--spec-green); }
+.s1 { stroke: var(--spec-yellow); }
+.s0 { stroke: var(--ink-2); }
+.scene {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.eye    { fill: var(--patch); stroke: var(--ink-2); stroke-width: 1.5; }
+.retina { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+.lens   { fill: var(--patch); stroke: var(--ink-2); stroke-width: 1.5; }
+.ray    { fill: none; stroke-width: 2; stroke-linejoin: round; }
+.ray-s  { stroke: var(--cone-s); }
+.ray-l  { stroke: var(--cone-l); }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  margin: 64px 56px 0;
+  padding: 20px 0 40px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+.site-footer p { margin: 0 0 6px; }
+.note-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  .note-light { display: none; }
+  .note-dark { display: inline; }
+}
+
+/* ---------- Narrower screens: one column ---------- */
+@media (max-width: 959px) {
+  .page {
+    max-width: 720px;          /* keeps lines under ~80 characters on tablets */
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 28px;
+    padding: 24px 12px 12px;
+  }
+  .profile {
+    position: static;
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr);
+    column-gap: 20px;
+    align-items: start;
+    padding: 0 8px;
+  }
+  .portrait { width: 104px; }
+  .profile h1 {
+    margin: 0 0 6px;
+    font-size: 2rem;
+  }
+  .contact {
+    grid-column: 1 / -1;
+    margin-top: 20px;
+  }
+  .profile-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+  }
+  .section-nav ul {
+    gap: 22px;
+    padding: 0 20px;
+  }
+  .patch-body {
+    padding: 32px 20px 8px;
+    font-size: 1.0625rem;
+  }
+  .lede { font-size: 1.1875rem; }
+  .site-footer { margin: 48px 20px 0; }
+}
+
+@media (max-width: 520px) {
+  /* Small figure beside the heading; the text gets the full width below. */
+  .study {
+    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-areas:
+      "fig head"
+      "body body";
+    column-gap: 16px;
+  }
+  .study-figure {
+    width: 64px;
+    height: 64px;
+    margin-top: 0;
+  }
+  .study-head { align-self: center; }
+  .study-body { margin-top: 14px; }
+  .dated > li {
+    grid-template-columns: 3rem minmax(0, 1fr);
+    column-gap: 14px;
+  }
+  .dated--months > li {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+}
+
+/* Short laptop screens: let the profile scroll with the page. */
+@media (min-width: 960px) and (max-height: 720px) {
+  .profile { position: static; }
+}
+
+/* ---------- Print ---------- */
+@media print {
+  :root {
+    --field: #ffffff;
+    --patch: #ffffff;
+    --ink: #000000;
+    --ink-2: #333333;
+    --accent: #000000;
+  }
+  .page {
+    display: block;
+    padding: 0;
+  }
+  .profile { position: static; }
+  .skip, .section-nav, .design-note { display: none; }
+  .patch-body { padding: 24px 0 0; }
+  .site-footer { margin: 32px 0 0; }
+}
